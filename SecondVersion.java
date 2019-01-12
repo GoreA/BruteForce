@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -116,19 +117,24 @@ public class SecondVersion {
 
             if (finalResult.toString().matches(finalNumberPatternString)) {
                 if (numbers.size() > 3) {
-                    for (int j = 0; j < intNumbers.get(1).size(); j++) {
-                        String intermediarNumberPattern = numbers.get(j + 2).replaceAll("x", "\\\\d");
-                        if (!Integer.valueOf(firstNum * intNumbers.get(1).get(j)).toString().matches(intermediarNumberPattern)) {
-                            return;
-                        }
+                    if(meetIntermidiateNumbers(intNumbers, numbers, firstNum)) {
+                        System.out.println(firstNum + " " + secondNum + " " + finalResult);
                     }
-                    System.out.println(firstNum + " " + secondNum + " " + finalResult);
                 } else {
                     System.out.println(firstNum + " " + secondNum + " " + finalResult);
                 }
             }
         }
+    }
 
+    private static boolean meetIntermidiateNumbers(List<List<Integer>> intNumbers, List<String> numbers, Integer firstNum){
+        for (int j = 0; j < intNumbers.get(1).size(); j++) {
+            String intermediarNumberPattern = numbers.get(j + 2).replaceAll("x", "\\\\d");
+            if (!Integer.valueOf(firstNum * intNumbers.get(1).get(j)).toString().matches(intermediarNumberPattern)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static Integer formNumber(List<Integer> numberList) {
@@ -137,5 +143,9 @@ public class SecondVersion {
             number = number * 10 + numberList.get(i);
         }
         return number;
+    }
+
+    private static List<Integer> populateResults(List<List<Integer>> intNumbers){
+        return intNumbers.stream().map(num -> formNumber(num)).collect(Collectors.toList());
     }
 }
